@@ -5,19 +5,19 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.android.trackmysleepquality.database.BooksDatabaseDao
+import com.example.android.trackmysleepquality.database.FavouriteBooks
 import com.example.holoubkoviknihy.MainActivity
 import com.example.holoubkoviknihy.R
 import com.example.holoubkoviknihy.model.Book
-import java.util.logging.Logger
 
-class RecyclerViewAdapter(private val mContext: Context, private val mData: List<Book>) : RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>() {
+class RecyclerViewAdapter(private val mContext: Context, private val mData: List<Book>, private val database: BooksDatabaseDao, private val showButton: Boolean = true) : RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>() {
 
     private val options: RequestOptions
 
@@ -47,6 +47,27 @@ class RecyclerViewAdapter(private val mContext: Context, private val mData: List
         holder.tvAuthor.text = book.authors
         holder.tvCategory.text = book.categories
 
+        if(!showButton) {
+            holder.addButton.visibility = View.INVISIBLE;
+        }else{
+            holder.addButton.setOnClickListener {
+                insertToFavourites(book)
+                it.visibility = View.GONE
+                holder.insertedText.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun insertToFavourites(book: Book){
+
+        Thread {
+            var row = FavouriteBooks()
+            row.author = book.authors
+            row.category = book.categories
+            row.description = book.description
+            row.name = book.title
+            database.insert(row)
+        }.start()
     }
 
     override fun getItemCount(): Int {
@@ -58,12 +79,19 @@ class RecyclerViewAdapter(private val mContext: Context, private val mData: List
         var tvCategory: TextView
         var tvAuthor: TextView
         var container: LinearLayout
+        var addButton: Button
+        var insertedText: TextView
+
+        lateinit var database: BooksDatabaseDao
 
         init {
             tvTitle = itemView.findViewById(R.id.name)
             tvAuthor = itemView.findViewById(R.id.author)
             tvCategory = itemView.findViewById(R.id.category)
             container = itemView.findViewById(R.id.container)
+            addButton = itemView.findViewById(R.id.button_add_favourite)
+            insertedText = itemView.findViewById(R.id.inserted_text)
+
         }
     }
 

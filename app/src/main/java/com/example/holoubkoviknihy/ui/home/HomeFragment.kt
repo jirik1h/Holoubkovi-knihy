@@ -21,6 +21,8 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.android.trackmysleepquality.database.BooksDatabase
+import com.example.android.trackmysleepquality.database.BooksDatabaseDao
 import com.example.holoubkoviknihy.R
 import com.example.holoubkoviknihy.adapters.RecyclerViewAdapter
 import com.example.holoubkoviknihy.model.Book
@@ -40,14 +42,19 @@ class HomeFragment : Fragment() {
 
     private lateinit var search_edit_text: EditText
     private lateinit var search_button: Button
-    private lateinit var loading_indicator: ProgressBar
-    private lateinit var error_message: TextView
+
+    private lateinit var database: BooksDatabaseDao
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val application = requireNotNull(this.activity).application
+
+        database = BooksDatabase.getInstance(application).booksDatabaseDao
+
         homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
@@ -76,27 +83,11 @@ class HomeFragment : Fragment() {
     private fun search() {
         val search_query: String = search_edit_text.getText().toString()
 
-        val is_connected: Boolean = context?.let { Read_network_state(it) } == true
-        if (!is_connected) {
-            error_message.setText("connection error")
-            mRecyclerView.visibility = View.INVISIBLE
-            error_message.visibility = View.VISIBLE
-            return
-        }
-
         val final_query = search_query.replace(" ", "+")
         val uri = Uri.parse(BASE_URL + final_query)
         val buider = uri.buildUpon()
         parseJson(buider.toString())
-    }
 
-
-    private fun Read_network_state(context: Context): Boolean {
-        val is_connected: Boolean
-        val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-        val info = cm.activeNetworkInfo
-        is_connected = info != null && info.isConnectedOrConnecting
-        return is_connected
     }
 
     private fun parseJson(key: String) {
@@ -132,7 +123,7 @@ class HomeFragment : Fragment() {
                                 categories
                             )
                         )
-                        mAdapter = context?.let { RecyclerViewAdapter(it, mBooks) }!!
+                        mAdapter = context?.let { RecyclerViewAdapter(it, mBooks, database) }!!
                         mRecyclerView.adapter = mAdapter
                     }
                 } catch (e: JSONException) {

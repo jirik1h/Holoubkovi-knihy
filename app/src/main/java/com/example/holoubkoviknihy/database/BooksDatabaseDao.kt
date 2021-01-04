@@ -26,13 +26,13 @@ import androidx.room.Update
 interface BooksDatabaseDao {
 
     @Insert
-    suspend fun insert(book: FavouriteBooks)
+    fun insert(book: FavouriteBooks)
 
     @Update
-    suspend fun update(book: FavouriteBooks)
+    fun update(book: FavouriteBooks)
 
     @Query("DELETE FROM favourite_books_table")
-    suspend fun clear()
+    fun clear()
 
     @Query("SELECT * FROM favourite_books_table ORDER BY id DESC")
     fun getAllBooks(): LiveData<List<FavouriteBooks>>

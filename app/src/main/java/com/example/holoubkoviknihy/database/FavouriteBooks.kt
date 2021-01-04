@@ -26,7 +26,7 @@ data class FavouriteBooks(
         var id: Long = 0L,
 
         @ColumnInfo(name = "name")
-        val name: String = "",
+        var name: String = "",
 
         @ColumnInfo(name = "category")
         var category: String = "",

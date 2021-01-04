@@ -80,4 +80,10 @@ dependencies {
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+
+    // lifecycleScope:
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0-alpha04'
+
+// viewModelScope:
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha04'
 }

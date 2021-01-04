@@ -44,13 +44,6 @@
             android:layout_marginTop="8dp"
             tools:listitem="@layout/book_item" />
 
-        <ProgressBar
-            android:id="@+id/loading_indicator"
-            android:visibility="invisible"
-            android:layout_width="50dp"
-
-            android:layout_centerInParent="true"
-            android:layout_height="50dp" />
     </RelativeLayout>
 
 

@@ -1,17 +1,12 @@
 package com.example.holoubkoviknihy.ui.home
 
-import android.content.Context
-import android.content.Context.CONNECTIVITY_SERVICE
-import android.net.ConnectivityManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -33,12 +28,12 @@ class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
 
-    private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mBooks: ArrayList<Book>
-    private lateinit var mAdapter: RecyclerViewAdapter
-    private lateinit var mRequestQueue: RequestQueue
+    private lateinit var booksRecyclerView: RecyclerView
+    private lateinit var myBooks: ArrayList<Book>
+    private lateinit var myRecycleAdapter: RecyclerViewAdapter
+    private lateinit var requestQueue: RequestQueue
 
-    private val BASE_URL = "https://www.googleapis.com/books/v1/volumes?q="
+    private val GOOGLE_API_URL = "https://www.googleapis.com/books/v1/volumes?q="
 
     private lateinit var search_edit_text: EditText
     private lateinit var search_button: Button
@@ -62,21 +57,18 @@ class HomeFragment : Fragment() {
         search_edit_text = root.findViewById<EditText>(R.id.search_box)
         search_button = root.findViewById<Button>(R.id.search_buttton)
 
-        mRecyclerView = root.findViewById<RecyclerView>(R.id.recycler_view)
-        mRecyclerView.setHasFixedSize(true)
-        mRecyclerView.setLayoutManager(LinearLayoutManager(activity))
-        mBooks = ArrayList<Book>()
-        mRequestQueue = Volley.newRequestQueue(activity)
+        booksRecyclerView = root.findViewById<RecyclerView>(R.id.recycler_view)
+        booksRecyclerView.setHasFixedSize(true)
+        booksRecyclerView.setLayoutManager(LinearLayoutManager(activity))
+        myBooks = ArrayList<Book>()
+        requestQueue = Volley.newRequestQueue(activity)
 
 
         search_button.setOnClickListener(View.OnClickListener {
-            mBooks.clear()
+            myBooks.clear()
             search()
         })
 
-        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-
-        })
         return root
     }
 
@@ -84,7 +76,7 @@ class HomeFragment : Fragment() {
         val search_query: String = search_edit_text.getText().toString()
 
         val final_query = search_query.replace(" ", "+")
-        val uri = Uri.parse(BASE_URL + final_query)
+        val uri = Uri.parse(GOOGLE_API_URL + final_query)
         val buider = uri.buildUpon()
         parseJson(buider.toString())
 
@@ -115,7 +107,7 @@ class HomeFragment : Fragment() {
                             categories = volumeInfo.getJSONArray("categories").getString(0)
                         } catch (e: Exception) {
                         }
-                        mBooks.add(
+                        myBooks.add(
                             Book(
                                 title,
                                 author,
@@ -123,14 +115,14 @@ class HomeFragment : Fragment() {
                                 categories
                             )
                         )
-                        mAdapter = context?.let { RecyclerViewAdapter(it, mBooks, database) }!!
-                        mRecyclerView.adapter = mAdapter
+                        myRecycleAdapter = context?.let { RecyclerViewAdapter(it, myBooks, database) }!!
+                        booksRecyclerView.adapter = myRecycleAdapter
                     }
                 } catch (e: JSONException) {
                     e.printStackTrace()
                     Log.e("TAG", e.toString())
                 }
             }) { error -> error.printStackTrace() }
-        mRequestQueue.add(request)
+        requestQueue.add(request)
     }
 }

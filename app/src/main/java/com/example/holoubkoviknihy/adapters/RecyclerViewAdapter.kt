@@ -69,8 +69,6 @@ class RecyclerViewAdapter(private val myContext: Context, private val myData: Li
         var addButton: Button
         var insertedText: TextView
 
-        lateinit var database: BooksDatabaseDao
-
         init {
             elTitle = itemView.findViewById(R.id.name)
             elAuthor = itemView.findViewById(R.id.author)

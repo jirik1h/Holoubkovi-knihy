@@ -14,4 +14,5 @@
     <string name="Failed_to_Load_data">Failed to load data</string>
     <string name="favourite_add">Add to favourite</string>
     <string name="favourite_added">Added to favourites</string>
+    <string name="favourite_remove">Remove from favourites</string>
 </resources>

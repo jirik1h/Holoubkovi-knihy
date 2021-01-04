@@ -1,14 +1,19 @@
 package com.example.holoubkoviknihy.ui.home
 
+import android.app.Activity
+import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.EditText
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +28,7 @@ import com.example.holoubkoviknihy.adapters.RecyclerViewAdapter
 import com.example.holoubkoviknihy.model.Book
 import org.json.JSONException
 import java.util.*
+
 
 class HomeFragment : Fragment() {
 
@@ -40,6 +46,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var database: BooksDatabaseDao
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -67,9 +74,20 @@ class HomeFragment : Fragment() {
         search_button.setOnClickListener(View.OnClickListener {
             myBooks.clear()
             search()
+
+            activity?.let { it1 -> hideSoftKeyboard(it1) };
         })
 
         return root
+    }
+
+    fun hideSoftKeyboard(activity: Activity) {
+        if (activity.currentFocus == null) {
+            return
+        }
+        val inputMethodManager =
+            activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(activity.currentFocus!!.windowToken, 0)
     }
 
     private fun search() {
@@ -115,7 +133,8 @@ class HomeFragment : Fragment() {
                                 categories
                             )
                         )
-                        myRecycleAdapter = context?.let { RecyclerViewAdapter(it, myBooks, database) }!!
+                        myRecycleAdapter =
+                            context?.let { RecyclerViewAdapter(it, myBooks, database) }!!
                         booksRecyclerView.adapter = myRecycleAdapter
                     }
                 } catch (e: JSONException) {

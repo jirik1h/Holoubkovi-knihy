@@ -54,7 +54,7 @@ class FavouritesFragment : Fragment() {
 
         binding.favouritesViewModel = favouritesViewModel
 
-        val adapter = FavouritesAdapter()
+        val adapter = FavouritesAdapter(dataSource)
         binding.recyclerViewFav.adapter = adapter
 
         favouritesViewModel.books.observe(viewLifecycleOwner, Observer {

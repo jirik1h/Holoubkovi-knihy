@@ -34,6 +34,9 @@ interface BooksDatabaseDao {
     @Query("DELETE FROM favourite_books_table")
     fun clear()
 
+    @Query("DELETE FROM favourite_books_table WHERE id = :id")
+    fun clearRow(id: Long)
+
     @Query("SELECT * FROM favourite_books_table ORDER BY id DESC")
     fun getAllBooks(): LiveData<List<FavouriteBooks>>
 }

@@ -50,6 +50,13 @@
             android:layout_height="wrap_content"
             android:text="@string/favourite_add" />
 
+        <Button
+            android:id="@+id/button_remove_favourite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/favourite_remove"
+            android:visibility="gone"/>
+
         <TextView
             android:id="@+id/inserted_text"
             android:layout_width="match_parent"

@@ -28,6 +28,9 @@ data class FavouriteBooks(
         @ColumnInfo(name = "name")
         val name: String = "",
 
+        @ColumnInfo(name = "category")
+        var category: String = "",
+
         @ColumnInfo(name = "author")
         var author: String = "",
 

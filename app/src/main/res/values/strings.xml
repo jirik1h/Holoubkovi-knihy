@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Holoubkovi knihy</string>
+    <string name="app_name">Holoubkovy knihy</string>
     <string name="title_home">Home</string>
     <string name="title_favourites">Favourites</string>
     <string name="title_activity_splash_screen">FullscreenActivity</string>
